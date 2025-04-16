@@ -1,4 +1,4 @@
-#define PIN_LED PB_7
+#define PIN_LED PC_14
 #define PIN_LED_GND NO_PIN
 
 #define PIN_PWR NO_PIN // some boards have transistor for enabling/disabling power to the peripheral, assumes active low
@@ -9,37 +9,37 @@
 // #define MIKROBUS_AVAILABLE 1 
 
 // Left header
-// #define PIN_AN PA_5
-// #define PIN_RST NO_PIN
-// #define PIN_RX_CS PA_3
-// #define PIN_SCK PA_1 // SPI1
-// // #define PIN_MISO PA_6
-// #define PIN_TX_MOSI PA_2
+#define PIN_AN PA_5
+#define PIN_RST NO_PIN
+#define PIN_RX_CS PA_3
+#define PIN_SCK PA_1 // SPI1
+#define PIN_MISO PA_6
+#define PIN_TX_MOSI PA_2
 
-// #define PIN_CS PIN_RX_CS
+#define PIN_CS PIN_RX_CS
 // VCC
 // GND
 
-// #define PIN_ASCK PIN_SCK
-// #define PIN_AMOSI PIN_TX_MOSI
-// #define PIN_AMISO PIN_MISO
+#define PIN_ASCK PIN_SCK
+#define PIN_AMOSI PIN_TX_MOSI
+#define PIN_AMISO PIN_MISO
 
 // Right header
-// #define PIN_PWM PA_4 // TIM14
-// #define PIN_INT NO_PIN
+#define PIN_PWM PA_4 // TIM14
+#define PIN_INT NO_PIN
 // RX/CS USART2
 // TX/MOSI
 
 // will compile I2C drivers if PIN_SDA is defined
-// #define PIN_SCL PA_9  // I2C2
-// #define PIN_SDA PA_10 // I2C2
+#define PIN_SCL PA_9  // I2C2
+#define PIN_SDA PA_10 // I2C2
 // 5V
 // GND
 
 #define BOARD_STARTUP_CODE LL_SYSCFG_EnablePinRemap(LL_SYSCFG_PIN_RMP_PA11 | LL_SYSCFG_PIN_RMP_PA12)
 
-// #define I2C_AF LL_GPIO_AF_6
-// #define I2C_IDX 1
+#define I2C_AF LL_GPIO_AF_6
+#define I2C_IDX 1
 
 // Jacdac pins
 #define UART_PIN PB_6
