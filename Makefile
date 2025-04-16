@@ -1,5 +1,5 @@
 .SECONDARY: # this prevents object files from being removed
-.DEFAULT_GOAL := all
+.DEFAULT_GOAL := all_py
 
 JD_CORE = jacdac-c
 JD_STM = jacdac-stm32x0
@@ -43,3 +43,9 @@ DROP_TARGETS ?= \
 
 
 include $(JD_STM)/build.mk
+
+# Run python3 hexes2bin.py at the end
+all_py: all
+	@echo "Running python3 hexes2bin.py"
+	@python3 hexes2bin.py
+	@echo "Done"
