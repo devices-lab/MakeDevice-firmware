@@ -1,7 +1,58 @@
+# MakeDevice-firmware
+
 This repository is a fork of [jacdac-msr-modules](https://github.com/jacdac/jacdac-msr-modules), 
 with additional targets created for the MakeDevice virtual modules. There is also a [python script](
 hexes2bin.py) which is used by the makefile to generate `firmware.bin` files for each
 target, needed by [MakeDevice-backend](https://github.com/devices-lab/MakeDevice-backend) for flashing
+
+## Flashing via rpi pico (alternative to blue pill)
+The [current documented methods](https://github.com/microsoft/jacdac-stm32x0/blob/main/README.md) for flashing STM32 based Jacdac modules make use of a blue pill or an ST-Link programmer. This is an alternative method that turns any Raspberry Pi Pico (or Pico W) into a general purpose SWD debug probe (via the CMSIS-DAP interface), which is also capable of flashing Jacdac modules. Try the following steps after you have generated a 'combined' `.hex` firmware file (contains both JD bootloader and app).
+
+### Debug probe - one time setup 
+1. Grab the `.uf2` file from [free-dap](https://github.com/ataradov/free-dap/raw/refs/heads/master/bin/free_dap_rp2040.uf2)
+2. Plug in your pico while holding the BOOTSEL button
+3. Drag and drop this `.uf2` file onto the pico
+4. Connect the following pico pin numbers to the Jacdac module's SWD nets (exposed via [hackconnect](https://microsoft.github.io/jacdac-docs/ddk/firmware/jac-connect/))
+- 38 - GND
+- 36 - 3V
+- 15 - SWCLK
+- 16 - SWDIO
+- 20 - nRST
+
+<img src="https://github.com/user-attachments/assets/dde2cfd8-527d-42c1-9b88-7a669bd0b1b6" width=400></img>
+
+### Flashing
+Once the debug probe is set up, flashing can be done using [OpenOCD](https://openocd.org/), or other software (such as [pyOCD](https://pyocd.io/), or [edbg](https://github.com/ataradov/edbg)).
+The following examples are for the STM32G030 target and the flex sensor service, but can be altered to work for other targets.
+
+#### OpenOCD - Widely used method
+`openocd -f stm32g0x-custom.cfg -c "program combined-flex.hex verify reset exit"`
+
+Here's the config file `stm32g0x-custom.cfg`:
+```tcl
+source [find interface/cmsis-dap.cfg]
+transport select swd
+source [find target/stm32g0x.cfg]
+adapter speed 480
+reset_config srst_only srst_nogate connect_assert_srst
+```
+
+#### pyOCD - Nicer to use but requires 'packs' to support certain targets, written in python
+ - `pyocd flash -M under-reset -f 40000 -t stm32g030j6mx --pack Keil.STM32G0xx_DFP.1.2.0.pack combined-flex.hex`
+
+
+#### edbg - Minimal and portable, written in C, supports very few targets
+1. Convert hex to binary (edbg doesn't support hex flashing)
+`objcopy --input-target=ihex --output-target=binary combined-flex.hex combined-flex.bin`
+2. Flash using:
+`edbg.exe -t stm32g0 -c 4000 -pv -f combined-flex.bin`
+
+<!-- 
+### Other uses
+Since this debug probe implements the generic CMSIS-DAP interface, it can be used for many different SWD/JTAG purposes.
+TODO: discuss GDB debugging, rp2040 target, nrf52833 target, microbit debugging? 
+-->
+
 
 # jacdac-msr-modules
 
