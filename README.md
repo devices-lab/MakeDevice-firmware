@@ -1,17 +1,17 @@
 # MakeDevice-firmware
 
 This repository is a fork of [jacdac-msr-modules](https://github.com/jacdac/jacdac-msr-modules), 
-with additional targets created for the MakeDevice virtual modules. There is also a [python script](
-hexes2bin.py) which is used by the makefile to generate `firmware.bin` files for each
+with additional targets created for the MakeDevice virtual modules. A [python script](
+hexes2bin.py) has also been added, which is used by the makefile to generate `firmware.bin` files for each
 target, needed by [MakeDevice-backend](https://github.com/devices-lab/MakeDevice-backend) for flashing
 
-## Flashing via rpi pico (alternative to blue pill)
-The [current documented methods](https://github.com/microsoft/jacdac-stm32x0/blob/main/README.md) for flashing STM32 based Jacdac modules make use of a blue pill or an ST-Link programmer. This is an alternative method that turns any Raspberry Pi Pico (or Pico W) into a general purpose SWD debug probe (via the CMSIS-DAP interface), which is also capable of flashing Jacdac modules. Try the following steps after you have generated a 'combined' `.hex` firmware file (contains both JD bootloader and app).
+## Optional: Flashing via Raspberry Pi Pico (alternative to blue pill / ST-Link)
+[Prior documented methods](https://github.com/microsoft/jacdac-stm32x0/blob/main/README.md) for flashing STM32 based Jacdac modules make use of a blue pill or an ST-Link programmer. This is an alternative method that turns any rp2040-based device, such as the Raspberry Pi Pico (or Pico W) into a general purpose SWD debug probe (via the CMSIS-DAP interface), allowing you to flash Jacdac modules with your computer. Try the following steps after you have generated a 'combined' `.hex` firmware file (contains both JD bootloader and app).
 
 ### Debug probe - one time setup 
 1. Grab the `.uf2` file from [free-dap](https://github.com/ataradov/free-dap/raw/refs/heads/master/bin/free_dap_rp2040.uf2)
-2. Plug in your pico while holding the BOOTSEL button
-3. Drag and drop this `.uf2` file onto the pico
+1. Plug in your pico while holding the BOOTSEL button
+2. Drag and drop the `.uf2` file onto the pico
 4. Connect the following pico pin numbers to the Jacdac module's SWD nets (exposed via [hackconnect](https://microsoft.github.io/jacdac-docs/ddk/firmware/jac-connect/))
 - 38 - GND
 - 36 - 3V
@@ -25,7 +25,7 @@ The [current documented methods](https://github.com/microsoft/jacdac-stm32x0/blo
 Once the debug probe is set up, flashing can be done using [OpenOCD](https://openocd.org/), or other software (such as [pyOCD](https://pyocd.io/), or [edbg](https://github.com/ataradov/edbg)).
 The following examples are for the STM32G030 target and the flex sensor service, but can be altered to work for other targets.
 
-#### OpenOCD - Widely used method
+#### OpenOCD - Widely used
 `openocd -f stm32g0x-custom.cfg -c "program combined-flex.hex verify reset exit"`
 
 Here's the config file `stm32g0x-custom.cfg`:
