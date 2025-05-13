@@ -5,8 +5,8 @@ with additional targets created for the MakeDevice virtual modules. A [python sc
 hexes2bin.py) has also been added, which is used by the makefile to generate `firmware.bin` files for each
 target, needed by [MakeDevice-backend](https://github.com/devices-lab/MakeDevice-backend) for flashing
 
-## Optional: Flashing via Raspberry Pi Pico (alternative to blue pill / ST-Link)
-[Prior documented methods](https://github.com/microsoft/jacdac-stm32x0/blob/main/README.md) for flashing STM32 based Jacdac modules make use of a blue pill or an ST-Link programmer. This is an alternative method that turns any rp2040-based device, such as the Raspberry Pi Pico (or Pico W) into a general purpose SWD debug probe (via the CMSIS-DAP interface), allowing you to flash Jacdac modules with your computer. Try the following steps after you have generated a 'combined' `.hex` firmware file (contains both JD bootloader and app).
+## Optional: Flashing Jacdac modules via Raspberry Pi Pico
+[Prior documented methods](https://github.com/microsoft/jacdac-stm32x0/blob/main/README.md) for flashing STM32 based Jacdac modules make use of a black magic probe, blue pill, or an ST-Link programmer. This is an alternative method that turns any rp2040-based device, such as the widespread Raspberry Pi Pico (or Pico W) into a general purpose SWD debug probe (via the CMSIS-DAP interface), allowing you to flash Jacdac modules with your computer. Try the following steps after you have generated a 'combined' `.hex` firmware file (contains both JD bootloader and app).
 
 ### Debug probe - one time setup 
 1. Grab the `.uf2` file from [free-dap](https://github.com/ataradov/free-dap/raw/refs/heads/master/bin/free_dap_rp2040.uf2)
@@ -15,9 +15,10 @@ target, needed by [MakeDevice-backend](https://github.com/devices-lab/MakeDevice
 4. Connect the following pico pin numbers to the Jacdac module's SWD nets (exposed via [hackconnect](https://microsoft.github.io/jacdac-docs/ddk/firmware/jac-connect/))
 - 38 - GND
 - 36 - 3V
-- 15 - SWCLK
-- 16 - SWDIO
-- 20 - nRST
+- 15 (GPIO11) - SWCLK
+- 16 (GPIO12) - SWDIO
+- 20 (GPIO15) - nRST
+<!-- To flash using the rp2040 brain Jacdac module, you can recompile free-dap to use different GPIO pins accessible by the user (https://github.com/microsoft/jacdac-ddk/blob/main/electronics/altium/brain-designs/JacdacRp2040BrainEc30%20124-1.5/PDF/JacdacRp2040BrainEc30%20124-1.5%20schematic.PDF) -->
 
 <img src="https://github.com/user-attachments/assets/dde2cfd8-527d-42c1-9b88-7a669bd0b1b6" width=400></img>
 
