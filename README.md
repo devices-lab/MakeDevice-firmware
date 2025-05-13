@@ -23,7 +23,7 @@ target, needed by [MakeDevice-backend](https://github.com/devices-lab/MakeDevice
 <img src="https://github.com/user-attachments/assets/dde2cfd8-527d-42c1-9b88-7a669bd0b1b6" width=400></img>
 
 ### Flashing
-Once the debug probe is set up, flashing can be done using [OpenOCD](https://openocd.org/), or other software (such as [pyOCD](https://pyocd.io/), or [edbg](https://github.com/ataradov/edbg)).
+Once the debug probe is set up and connected to your computer over USB, flashing can be done using [OpenOCD](https://openocd.org/), or other software (such as [pyOCD](https://pyocd.io/), or [edbg](https://github.com/ataradov/edbg)).
 The following examples are for the STM32G030 target and the flex sensor service, but can be altered to work for other targets.
 
 #### OpenOCD - Widely used
