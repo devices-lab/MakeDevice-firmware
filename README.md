@@ -39,6 +39,7 @@ reset_config srst_only srst_nogate connect_assert_srst
 ```
 
 #### pyOCD - Nicer to use but requires 'packs' to support certain targets, written in python
+ - `pyocd flash -t stm32g030f6px --pack Keil.STM32G0xx_DFP.1.2.0.pack combined-flex.hex`
  - `pyocd flash -M under-reset -f 40000 -t stm32g030j6mx --pack Keil.STM32G0xx_DFP.1.2.0.pack combined-flex.hex`
 
 
