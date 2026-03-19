@@ -1,5 +1,6 @@
 #include "jdprofile.h"
-#include "jacdac/dist/c/illuminance.h"
+#include "math.h"
+#include "interfaces/jd_adc.h"
 
 FIRMWARE_IDENTIFIER(0x3872b0c7, "Light Sensor");
 
@@ -23,7 +24,7 @@ typedef struct state {
     uint32_t nextSampleTimeUS;
 } ctx_t;
 
-static float inline smd1206_30_voltage_to_lux(uint16_t adc_volt);
+inline static float smd1206_30_voltage_to_lux(uint16_t adc_volt);
 static void phototransistor_init(void);
 static void phototransistor_process(void);
 static bool phototransistor_is_present(void);
@@ -35,7 +36,7 @@ static void *phototransistor_lightLevelLX(void);
  * Unfortunately the collector for this SMD1206 is tied to 3v3 instead of 5v
  * SMD1206 is https://www.lcsc.com/datasheet/C250857.pdf
  */
-static float inline smd1206_30_voltage_to_lux(uint16_t adc_volt) {
+inline static float smd1206_30_voltage_to_lux(uint16_t adc_volt) {
     return powf((24.81925 * adc_volt), 1.05638);
 }
 
