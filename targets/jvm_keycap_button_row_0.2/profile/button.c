@@ -1,6 +1,6 @@
 #include "jdprofile.h"
 
-FIRMWARE_IDENTIFIER(0x3ee73659, "Button Row (six)");
+FIRMWARE_IDENTIFIER(0x3ee73659, "Keycap Button Row (six)");
 
 void app_init_services() {
     button_init(PA_4, 0, -1);
