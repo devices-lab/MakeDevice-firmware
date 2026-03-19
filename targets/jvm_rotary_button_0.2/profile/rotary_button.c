@@ -1,5 +1,5 @@
 #include "jdprofile.h"
-FIRMWARE_IDENTIFIER(0x347f56eb, "JVM Rotary + Btn v0.1");
+FIRMWARE_IDENTIFIER(0x347f56eb, "Rotary Button");
 
 void app_init_services() {
     rotaryencoder_init(PA_7, PA_6, 15, 0);

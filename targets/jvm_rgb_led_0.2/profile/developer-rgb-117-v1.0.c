@@ -1,6 +1,6 @@
 #include "jdprofile.h"
 
-FIRMWARE_IDENTIFIER(0x33dbec8c, "JVM Developer RGB 117 v1.0");
+FIRMWARE_IDENTIFIER(0x33dbec8c, "RGB LED");
 
 static const led_params_t params = {
     .pin_r = PA_6,
