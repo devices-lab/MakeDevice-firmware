@@ -55,6 +55,15 @@ Since this debug probe implements the generic CMSIS-DAP interface, it can be use
 TODO: discuss GDB debugging, rp2040 target, nrf52833 target, microbit debugging? 
 -->
 
+### Debugging
+
+Connect to an already flashed target MCU and debug it using gdb. 
+The following commands start a gdb server, then connect to it and load both the app and bootloader debug symbols for the `jvm-env-sensor-v2.0` module (NOTE: Unclear if this command loads the symbols correctly):
+```sh
+pyocd gdb -t stm32g030f6px --pack Keil.STM32G0xx_DFP.1.2.0.pack
+
+arm-none-eabi-gdb -nx built/jvm-env-sensor-v2.0/bl-env.elf -ex "target remote:3333" -ex "monitor reset halt" -ex "set confirm off" -ex "add-symbol-file built/jvm-env-sensor-v2.0/app-env.elf 0x08000000"
+```
 
 # jacdac-msr-modules
 
