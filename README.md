@@ -22,6 +22,24 @@ target, needed by [MakeDevice-backend](https://github.com/devices-lab/MakeDevice
 
 <img src="https://github.com/user-attachments/assets/dde2cfd8-527d-42c1-9b88-7a669bd0b1b6" width=400></img>
 
+### Alternative debug-probe
+You can make a CMSIS-DAP debugprobe out of a board with an RP2040 or RP2350 using [raspberrypi/debugprobe](https://github.com/raspberrypi/debugprobe).
+
+You can check the pins that the debugprobe_on_pico2.uf2 is using via this picotool command. 
+```
+sudo picotool info -p
+Fixed Pin Information
+ 0:   UART0 TX, UART0 TX
+ 1:   PROBE RESET, UART0 RX, UART0 RX
+ 2:   PROBE SWCLK
+ 3:   PROBE SWDIO
+ 4:   PROBE UART TX
+ 5:   PROBE UART RX
+ 25:  LED
+```
+
+You should connect 3v3, GND, PROBE SWDIO, PROBE SWCLK, PROBE RESET to the hackconnect pins.
+
 ### Flashing
 Once the debug probe is set up and connected to your computer over USB, flashing can be done using [OpenOCD](https://openocd.org/), or other software (such as [pyOCD](https://pyocd.io/), or [edbg](https://github.com/ataradov/edbg)).
 The following examples are for the STM32G030 target and the flex sensor service, but can be altered to work for other targets.
@@ -64,6 +82,7 @@ pyocd gdb -t stm32g030f6px --pack Keil.STM32G0xx_DFP.1.2.0.pack
 
 arm-none-eabi-gdb -nx built/jvm-env-sensor-v2.0/bl-env.elf -ex "target remote:3333" -ex "monitor reset halt" -ex "set confirm off" -ex "add-symbol-file built/jvm-env-sensor-v2.0/app-env.elf 0x08000000"
 ```
+
 
 # jacdac-msr-modules
 
