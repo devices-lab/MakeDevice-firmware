@@ -5,6 +5,26 @@ with additional targets created for the MakeDevice virtual modules. A [python sc
 hexes2bin.py) has also been added, which is used by the makefile to generate `firmware.bin` files for each
 target, needed by [MakeDevice-backend](https://github.com/devices-lab/MakeDevice-backend) for flashing
 
+# Table of contents
+- [Optional: Flashing Jacdac modules via Raspberry Pi Pico](#optional-flashing-jacdac-modules-via-raspberry-pi-pico)
+  - [Debug probe - one time setup](#debug-probe---one-time-setup)
+  - [Raspberry PI debug-probe](#raspberry-pi-debug-probe)
+  - [Flashing](#flashing)
+    - [OpenOCD - Widely used](#openocd---widely-used)
+    - [pyOCD - Nicer to use but requires 'packs' to support certain targets, written in python](#pyocd---nicer-to-use-but-requires-packs-to-support-certain-targets-written-in-python)
+    - [edbg - Minimal and portable, written in C, supports very few targets](#edbg---minimal-and-portable-written-in-c-supports-very-few-targets)
+  - [Debugging](#debugging)
+- [jacdac-msr-modules](#jacdac-msr-modules)
+  - [Contributing](#contributing)
+  - [Trademarks](#trademarks)
+- [jacdac-firmware-notes - STM32G0](#jacdac-firmware-notes---stm32g0)
+  - [Build environment](#build-environment)
+  - [Module source code](#module-source-code)
+  - [Building the firmware](#building-the-firmware)
+  - [Flashing the firmware onto a module](#flashing-the-firmware-onto-a-module)
+  - [Releasing the firmware](#releasing-the-firmware)
+  - [Deploying the latest firmware via the web](#deploying-the-latest-firmware-via-the-web)
+
 ## Optional: Flashing Jacdac modules via Raspberry Pi Pico
 [Prior documented methods](https://github.com/microsoft/jacdac-stm32x0/blob/main/README.md) for flashing STM32 based Jacdac modules make use of a black magic probe, blue pill, or an ST-Link programmer. This is an alternative method that turns any rp2040-based device, such as the widespread Raspberry Pi Pico (or Pico W) into a general purpose SWD debug probe (via the CMSIS-DAP interface), allowing you to flash Jacdac modules with your computer. Try the following steps after you have generated a 'combined' `.hex` firmware file (contains both JD bootloader and app).
 
@@ -22,11 +42,17 @@ target, needed by [MakeDevice-backend](https://github.com/devices-lab/MakeDevice
 
 <img src="https://github.com/user-attachments/assets/dde2cfd8-527d-42c1-9b88-7a669bd0b1b6" width=400></img>
 
-### Alternative debug-probe
-You can make a CMSIS-DAP debugprobe out of a board with an RP2040 or RP2350 using [raspberrypi/debugprobe](https://github.com/raspberrypi/debugprobe).
+### Raspberry PI debug-probe
+You can make a CMSIS-DAP debugprobe out of any board with an RP2040 or RP2350 using [raspberrypi/debugprobe](https://github.com/raspberrypi/debugprobe). We did this with a PI Pico and PI Pico 2.
 
-You can check the pins that the debugprobe_on_pico2.uf2 is using via this picotool command. 
+After compiling and flashing by following the steps on [debugprobe/README](https://github.com/raspberrypi/debugprobe/blob/master/README.md) you can check your device is a probe by running:
+```sh
+pyocd list
 ```
+You should see your device appear as a debugprobe.
+
+You can check the pins that the debugprobe_on_pico2.uf2 uses via this picotool command, we ran this on our flashed PI Pico 2:
+```sh
 sudo picotool info -p
 Fixed Pin Information
  0:   UART0 TX, UART0 TX
@@ -38,7 +64,9 @@ Fixed Pin Information
  25:  LED
 ```
 
-You should connect 3v3, GND, PROBE SWDIO, PROBE SWCLK, PROBE RESET to the hackconnect pins.
+By 'Fixed Pin' it is reffering to GPIO. E.g: GPIO1 is PROBE RESET.
+
+You need to connect 3v3, GND, PROBE SWDIO, PROBE SWCLK, PROBE RESET to the hackconnect pins.
 
 ### Flashing
 Once the debug probe is set up and connected to your computer over USB, flashing can be done using [OpenOCD](https://openocd.org/), or other software (such as [pyOCD](https://pyocd.io/), or [edbg](https://github.com/ataradov/edbg)).
@@ -75,13 +103,22 @@ TODO: discuss GDB debugging, rp2040 target, nrf52833 target, microbit debugging?
 
 ### Debugging
 
-Connect to an already flashed target MCU and debug it using gdb. 
-The following commands start a gdb server, then connect to it and load both the app and bootloader debug symbols for the `jvm-env-sensor-v2.0` module (NOTE: Unclear if this command loads the symbols correctly):
+After flashing a target MCU you can debug it using gdb and pyocd.
+The following command will start a gdb server, connect to it and load debug symbols from the bl-xxx.elf. We're using `jvm-env-0.2` as our example.
+
+(NOTE: stm32g030f6px doesn't come with pyocd, you need a pack for it):
+
+1. In the first terminal start the pyocd server:
 ```sh
 pyocd gdb -t stm32g030f6px --pack Keil.STM32G0xx_DFP.1.2.0.pack
-
-arm-none-eabi-gdb -nx built/jvm-env-sensor-v2.0/bl-env.elf -ex "target remote:3333" -ex "monitor reset halt" -ex "set confirm off" -ex "add-symbol-file built/jvm-env-sensor-v2.0/app-env.elf 0x08000000"
 ```
+2. In the second terminal start GDB, connect it to pyocd and then reset the device, ready for debugging:
+```sh
+arm-none-eabi-gdb -nx built/jvm-env-sensor-v2.0/bl-env.elf -ex "target remote:3333" -ex "monitor reset halt"
+```
+
+This ```arm-non-eabi-gdb``` command is connecting to that pyocd session and resetting the target. The .elf file that you use for debugging is important because the completeness of the symbol table for the bl-xxx.elf and app-xxx.elf are different.
+When debugging, if you see ??? or other incomplete elements you can try using a different symbol table, or addding ```-ex "add-symbol-file built/jvm-env-sensor-v2.0/app-env.elf 0x08000000"``` to the end of the aforementioned command. This will use both of the .elfs. It is important to note that the order in which you add them affects the combined symbol table, because the latter .elf can rewrite elements of the symbol table that the first has already defined. We're not sure to what extent this modifies the combined elf, so we would recommend just using a single .elf, as shown above.
 
 
 # jacdac-msr-modules
