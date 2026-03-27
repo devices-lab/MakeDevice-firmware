@@ -2,7 +2,7 @@
 
 FIRMWARE_IDENTIFIER(0x39a6c1e2, "Accelerometer");
 
-// this depends on physical placement of accelerometer on PCB
+// This depends on physical placement of accelerometer on PCB
 void accelerometer_data_transform(int32_t sample[3]) {
     int32_t v0 = sample[0]; // x
     int32_t v1 = sample[1]; // y
@@ -12,6 +12,6 @@ void accelerometer_data_transform(int32_t sample[3]) {
     sample[2] = v2;
 }
 
-void app_init_services() {
+void app_init_services(void) {
     accelerometer_init(&accelerometer_kxtj3);
 }

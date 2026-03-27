@@ -10,4 +10,6 @@
 #define UART_PIN_AF LL_GPIO_AF_0
 #define USART_IDX 1
 
+// This clocksource isn't defined for our chip, so it results in a compiler error.
+// We don't need this exact clocksource though
 #define LL_RCC_I2C2_CLKSOURCE_HSI NULL
