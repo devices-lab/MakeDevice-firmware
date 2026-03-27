@@ -6,13 +6,13 @@ hexes2bin.py) has also been added, which is used by the makefile to generate `fi
 target, needed by [MakeDevice-backend](https://github.com/devices-lab/MakeDevice-backend) for flashing
 
 # Table of contents
-- [Optional: Flashing Jacdac modules via Raspberry Pi Pico](#optional-flashing-jacdac-modules-via-raspberry-pi-pico)
-  - [Debug probe - one time setup](#debug-probe---one-time-setup)
-  - [Raspberry PI debug-probe](#raspberry-pi-debug-probe)
+- [Flashing Jacdac modules via Raspberry Pi Pico](#optional-flashing-jacdac-modules-via-raspberry-pi-pico)
+  - [Free-DAP setup](#debug-probe---one-time-setup)
+  - [Raspberry PI debug-probe setup](#raspberry-pi-debug-probe)
   - [Flashing](#flashing)
-    - [OpenOCD - Widely used](#openocd---widely-used)
-    - [pyOCD - Nicer to use but requires 'packs' to support certain targets, written in python](#pyocd---nicer-to-use-but-requires-packs-to-support-certain-targets-written-in-python)
-    - [edbg - Minimal and portable, written in C, supports very few targets](#edbg---minimal-and-portable-written-in-c-supports-very-few-targets)
+    - [with OpenOCD](#openocd---widely-used)
+    - [with pyOCD](#pyocd---nicer-to-use-but-requires-packs-to-support-certain-targets-written-in-python)
+    - [with edbg](#edbg---minimal-and-portable-written-in-c-supports-very-few-targets)
   - [Debugging](#debugging)
 - [jacdac-msr-modules](#jacdac-msr-modules)
   - [Contributing](#contributing)
