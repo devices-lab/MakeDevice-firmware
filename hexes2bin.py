@@ -1,7 +1,7 @@
 # objcopy --input-target=ihex --output-target=binary
 """
 Goes into every subdirectory of built/ and converts all hex files with "combined" in the name to binary files
-called firmware.bin.
+called {folder_name}.bin.
 """
 
 import os
@@ -14,8 +14,8 @@ def convert_hex_to_bin(hex_file):
     """
     # Get the name of the hex file without the extension
     base_name = os.path.splitext(hex_file)[0]
-    # Create the name of the binary file "firmware.bin"
-    bin_file = os.path.join(os.path.dirname(hex_file), "firmware.bin")
+    # Create the name of the binary file "{folder_name (not filename)}.bin"
+    bin_file = os.path.join(os.path.dirname(hex_file), os.path.basename(os.path.dirname(hex_file)) + ".bin")
     # Run objcopy to convert the hex file to a binary file
     subprocess.run(["objcopy", "--input-target=ihex", "--output-target=binary", hex_file, bin_file], check=True)
 
