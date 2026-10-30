@@ -1,4 +1,4 @@
-# TRG = jm-v2.1 servo
+TRG = jm-v2.1 servo
 # TRG = jm-flex-sensor-1.0 flex
 # TRG = jm-mikrobus-61-3.4 colorclick
 
@@ -6,7 +6,8 @@
 # TRG = vm_rgb_ring_0.2 npx
 # TRG = vm_rgb_led_0.2 developer-rgb-117-v1.0
 # TRG = vm_keycap_button_0.2 button
-TRG = vm_rotary_button_0.2 rotary_button
+# TRG = vm_rotary_button_0.2 rotary_button
+# TRG = jvm_rgb_led_FV2 led
 # =======
 
 # use -j1 or empty to disable parallel build; use -j16 or whatever if you have lots of cores
@@ -19,15 +20,15 @@ TRG = vm_rotary_button_0.2 rotary_button
 #OPENOCD = openocd -f interface/stlink-v2-1.cfg -f target/stm32f0x.cfg
 
 # set to empty (uncomment) to disable Black Magic Probe (and enable openocd)
-BMP = 
+# BMP = 
 
 # set to say COM3 if that's where your BMP is connected; on macOS the value is auto-detected
 # BMP_PORT = //./COM3
-BMP_PORT = /dev/ttyACM0
+# BMP_PORT = /dev/ttyACM0
 # BMP_PORT = /dev/ttyACM1
 
 # which folders to build on 'make drop'
 #DROP_TARGETS = jm-v2.1
 
 # If you have 'ccache' installed, uncomment this to speed up build
-#CCACHE = ccache
+# CCACHE = ccache
